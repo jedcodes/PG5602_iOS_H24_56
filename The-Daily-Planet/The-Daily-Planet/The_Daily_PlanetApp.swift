@@ -1,6 +1,7 @@
 
 
 import SwiftUI
+import SwiftData
 
 @main
 struct The_Daily_PlanetApp: App {
@@ -8,5 +9,9 @@ struct The_Daily_PlanetApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [Article.self, Category.self, Search.self, Country.self])
     }
+    init() {
+            print(URL.applicationSupportDirectory.path(percentEncoded: false))
+        }
 }

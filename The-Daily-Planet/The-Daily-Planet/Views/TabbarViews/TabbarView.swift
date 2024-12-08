@@ -11,7 +11,7 @@ struct TabbarView: View {
                    .tabItem {
                        Label("Search", systemImage: "magnifyingglass")
                    }
-               SettingScreen()
+               SettingScreen(model: APICategoryStore())
                    .tabItem {
                        Label("Settings", systemImage: "gearshape")
                    }

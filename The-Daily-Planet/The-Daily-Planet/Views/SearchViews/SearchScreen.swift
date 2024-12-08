@@ -1,6 +1,9 @@
 import SwiftUI
+import SwiftData
 
 struct SearchScreen: View {
+    @Query private var searchHistories: [Search]
+    @Environment(\.modelContext) private var modelContext
     @State private var isShowingSheet: Bool = false
     private let model = SearchStore()
     @State private var searchTerm: String = ""
@@ -18,6 +21,8 @@ struct SearchScreen: View {
                         .onSubmit {
                             Task {
                                 await model.getArticles(query: searchTerm)
+                                let searchedTerm = Search(searchedTerm: searchTerm)
+                                modelContext.insert(searchedTerm)
                                 searchTerm = ""
                             }
                         }
@@ -43,6 +48,23 @@ struct SearchScreen: View {
                 .padding(.horizontal, 20)
             }
             .navigationTitle("Search")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        
+                        ForEach(searchHistories, id:\.searchedTerm) { history in
+                            Button(history.searchedTerm) {
+                                Task {
+                                    await model.getArticles(query: history.searchedTerm)
+                                }
+                            }
+                        }
+                        
+                    } label: {
+                        Label("Search History", systemImage: "line.horizontal.3.decrease.circle")
+                    }
+                }
+            }
         }
     }
 }

@@ -28,7 +28,9 @@ struct BottomSheetView: View {
                     // Picker for existing categories
                     Picker("Select Category", selection: $selectedCategory) {
                         ForEach(categories, id: \.categoryTitle) { category in
-                            Text(category.categoryTitle)
+                            Text("\(category.categoryTitle)")
+                                .font(Font.custom("Poppins-Medium", size: 16))
+                                .foregroundStyle(Colors.TextColor)
                         }
                     }
                     .pickerStyle(.wheel)
@@ -43,45 +45,44 @@ struct BottomSheetView: View {
                             .foregroundStyle(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Colors.SecondaryBG)
+                            .background(Colors.ButtonBG)
                             .cornerRadius(10)
                             .padding(.horizontal)
                     }
                     
                     Spacer()
-                }
-            }
-            .safeAreaInset(edge: .bottom) {
-                VStack {
-                    Text("Create a New Category")
-                        .font(Font.custom("Poppins-Medium", size: 18))
-                        .foregroundStyle(Colors.TextColor)
-                        .padding()
                     
-                    TextField("Enter category title", text: $categoryName)
-                        .padding()
-                        .background(Colors.SecondaryBG)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                    
-                    TextField("Enter category note", text: $categoryNote)
-                        .padding()
-                        .background(Colors.SecondaryBG)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
-                    
-                    Button(action: {
-                        createNewCategory()
-                        dismiss()
-                    }) {
-                        Text("Create Category with Article")
-                            .font(Font.custom("Poppins-Medium", size: 16))
-                            .foregroundStyle(.white)
+                    VStack {
+                        Text("Create a New Category")
+                            .font(Font.custom("Poppins-Medium", size: 18))
+                            .foregroundStyle(Colors.TextColor)
+                           
+                        
+                        TextField("Enter category title", text: $categoryName)
                             .padding()
-                            .frame(maxWidth: .infinity)
                             .background(Colors.SecondaryBG)
                             .cornerRadius(10)
                             .padding(.horizontal)
+                        
+                        TextField("Enter category note", text: $categoryNote)
+                            .padding()
+                            .background(Colors.SecondaryBG)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
+                        
+                        Button(action: {
+                            createNewCategory()
+                            dismiss()
+                        }) {
+                            Text("Create Category with Article")
+                                .font(Font.custom("Poppins-Medium", size: 16))
+                                .foregroundStyle(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Colors.ButtonBG)
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                        }
                     }
                 }
             }
@@ -100,6 +101,7 @@ struct BottomSheetView: View {
             content: article.content ?? "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
             source: article.source.name
         )
+        
         
         if let category = categories.first(where: { $0.categoryTitle == selectedCategory }) {
             category.categoryArticles.append(articleToAdd)
@@ -135,7 +137,6 @@ struct BottomSheetView: View {
             
             // Persist the new category and article using `modelContext`
             modelContext.insert(newCategory)
-            modelContext.insert(articleToAdd)
             
             // Reset input fields
             categoryName = ""
