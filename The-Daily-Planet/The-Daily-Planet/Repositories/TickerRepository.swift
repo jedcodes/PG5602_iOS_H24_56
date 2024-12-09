@@ -1,17 +1,31 @@
 import Foundation
 
 struct TickerRepository {
-    private let BASE_URL = "https://newsapi.org/v2/top-headlines/sources"
+    private let BASE_URL = "https://newsapi.org/v2/top-headlines"
     private let API_KEY = "a4a89329e9b5499d9be4907c2eda4d78"
     
-    
-    func fetchHeadlines() async throws -> [NewsArticle] {
-        print("Fetching")
+    func fetchHeadlines(country: String? = nil, category: String? = nil) async throws -> [NewsArticle] {
+        print("Fetching articles")
+        
+        // Construct query parameters
+        var queryItems = [URLQueryItem(name: "apiKey", value: API_KEY)]
+        
+        if let country = country {
+            queryItems.append(URLQueryItem(name: "country", value: country))
+        }
+        
+        if let category = category {
+            queryItems.append(URLQueryItem(name: "category", value: category))
+        }
         
         // Construct URL
-        guard let url = URL(string: "\(BASE_URL)?country=us&apiKey=\(API_KEY)") else {
+        var urlComponents = URLComponents(string: BASE_URL)
+        urlComponents?.queryItems = queryItems
+        
+        guard let url = urlComponents?.url else {
             throw ErrorRepository.invalidURL
         }
+        
         print("URL: \(url)")
         
         // Fetch Data
